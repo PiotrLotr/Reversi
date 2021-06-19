@@ -1,6 +1,5 @@
-package sample;
+package other;
 
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 

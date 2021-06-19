@@ -1,8 +1,11 @@
-package sample;
+package Reversi;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import other.BoardSquare;
 import javafx.scene.Scene;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -10,14 +13,15 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+public class View extends Application {
 
     GridPane board = new GridPane();
     Stage stage = new Stage();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene scene = new Scene(getBoard(), 600, 600);
+    public void start(Stage primaryStage) {
+        Scene scene = new Scene(drawBoard(), 600, 600);
+        addGridEvent();
         stage.setScene(scene);
         stage.show();
     }
@@ -26,11 +30,12 @@ public class Main extends Application {
         launch(args);
     }
 
-    public GridPane getBoard() {
+    public GridPane drawBoard() {
+
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                BoardSquare square = new BoardSquare(Color.GREEN);
-                board.add(square.createBoardSquare(col,row), col, row);
+                BoardSquare boardSquare = new BoardSquare(Color.GREEN, col,row);
+                board.add(boardSquare, boardSquare.getCol(), boardSquare.getRow());
             }
         }
         for (int row = 0; row < 8; row++) {
@@ -46,13 +51,27 @@ public class Main extends Application {
         return board;
     }
 
-//    public void refreshBoard(){
-//        for (int col = 0; col < pawns.length; col++) {
-//            for (int row = 0; row < pawns[col].length; col++) {
-//
-//            }
-//        }
+//    private void mouseEntered(MouseEvent e) {
+//        Node source = (Node)e.getSource() ;
+//        Integer colIndex = GridPane.getColumnIndex(source);
+//        Integer rowIndex = GridPane.getRowIndex(source);
+//        System.out.printf("Mouse entered cell [%d, %d]%n", colIndex.intValue(), rowIndex.intValue());
 //    }
+
+    public void handle(MouseEvent e) {
+        Node source = (Node) e.getSource() ;
+        Integer colIndex = GridPane.getColumnIndex(source);
+        Integer rowIndex = GridPane.getRowIndex(source);
+        var selected = (BoardSquare)getNodeByRowColumnIndex(rowIndex, colIndex, board);
+        selected.getPawn().setVisible(true);
+        System.out.println(selected);
+
+    }
+
+    private void addGridEvent() {
+        board.getChildren().forEach(item -> {
+            item.setOnMouseClicked(this::handle);});}
+
 
     public static Node getNodeByRowColumnIndex (final int row, final int column, GridPane gridPane) {
         Node result = null;
@@ -67,5 +86,7 @@ public class Main extends Application {
 
         return result;
     }
+
+
 
 }
