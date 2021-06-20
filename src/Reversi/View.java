@@ -2,7 +2,6 @@ package Reversi;
 
 import javafx.application.Application;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import other.BoardSquare;
@@ -61,18 +60,27 @@ public class View extends Application {
 
     public void handle(MouseEvent e) {
         Node source = (Node) e.getSource() ;
+
         Integer colIndex = board.getColumnIndex(source);
         Integer rowIndex = board.getRowIndex(source);
+
         var selected = (BoardSquare)getNodeByRowColumnIndex(rowIndex, colIndex, board);
+
+        // modify pawn()
         selected.getPawn().setVisible(true);
         if(clickCounter%2 ==0){
             selected.getPawn().setFill(Color.BLACK);
         }else{
             selected.getPawn().setFill(Color.WHITE);
         }
+
         System.out.println(selected);
         System.out.println(clickCounter);
         clickCounter++;
+
+        VectorOperations vectorOperations = new VectorOperations(colIndex, rowIndex);
+        vectorOperations.refreshBoard(board, selected);
+
     }
 
     private void addGridEvent() {
@@ -93,6 +101,10 @@ public class View extends Application {
 
         return result;
     }
+
+    // col(x), row (y)
+    // local center of axis x0,y0 -> selected pawn
+
 
 
 
