@@ -6,6 +6,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
 import other.BoardSquare;
 import other.Vector;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -20,49 +21,51 @@ class VectorOperations {
 
     int col0;
     int row0;
+    Paint paintOfStartingPawn;
+
 
     public VectorOperations(int col0, int row0) {
         this.col0 = col0;
         this.row0 = row0;
     }
 
-    public boolean isFittingOccAlongDir(Vector vector, GridPane board) {
-        var startingPawn = (BoardSquare) getNodeByRowColumnIndex(row0, col0, board);
+    public boolean isFittingOccAlongDir(Vector vector, GridPane board, BoardSquare startingPawn) {
         var neighbourAlongDir = getNeighbourAlongDir(vector, board, startingPawn);
 
-        if (neighbourAlongDir.getPawn().isVisible() == true && neighbourAlongDir.getPawn().getFill() != startingPawn.getPawn().getFill()) {
+        if (neighbourAlongDir.getPawn().isVisible() == true &&
+                neighbourAlongDir.getPawn().getFill() != startingPawn.getPawn().getFill() &&
+                neighbourAlongDir.getPawn() != null) {
             return true;
         } else {
             return false;
         }
     }
 
-    public void refreshInDirection(Vector vector, GridPane board, BoardSquare startingPawn, BoardSquare neighbourAlongDir){
-        Paint beginningPaint = startingPawn.getPawn().getFill();
-        ArrayList <BoardSquare> pawnsInfected = new ArrayList<>();
+    public void refreshInDirection(Vector vector, GridPane board, BoardSquare startingPawn) {
+        ArrayList<BoardSquare> pawnsInfected = new ArrayList<>();
+        BoardSquare neighbourAlongDir = getNeighbourAlongDir(vector, board, startingPawn);
 
-        while(neighbourAlongDir.getPawn().isVisible() == true ||
-                neighbourAlongDir.getPawn().getFill() != beginningPaint ||
-                neighbourAlongDir.getPawn() != null) {
-
-            if (isFittingOccAlongDir(vector, board)) {
-                pawnsInfected.add(neighbourAlongDir);
-                new VectorOperations(row0 + vector.getyDir(),col0 + vector.getxDir());
-            }
+        while (isFittingOccAlongDir(vector, board, neighbourAlongDir)) {
+            pawnsInfected.add(neighbourAlongDir);
+            neighbourAlongDir = getNeighbourAlongDir(vector, board, neighbourAlongDir);
+            System.out.println(neighbourAlongDir);
         }
-        for (BoardSquare boardSquare: pawnsInfected) {
-            boardSquare.getPawn().setFill(beginningPaint);
+
+        if (getNeighbourAlongDir(vector, board, neighbourAlongDir).getPawn().getFill() == paintOfStartingPawn) {
+            for (BoardSquare boardSquare : pawnsInfected) {
+                boardSquare.getPawn().setFill(paintOfStartingPawn);
+            }
         }
     }
 
-    public BoardSquare getNeighbourAlongDir(Vector vector, GridPane board,BoardSquare startingPawn){
-        var neighbourAlongDir = (BoardSquare) getNodeByRowColumnIndex(row0 + vector.getyDir(),col0 + vector.getxDir(), board);
+    public BoardSquare getNeighbourAlongDir(Vector vector, GridPane board, BoardSquare startingPawn) {
+        var neighbourAlongDir = (BoardSquare) getNodeByRowColumnIndex(startingPawn.getPawn().getY() + vector.getyDir(), startingPawn.getPawn().getX() + vector.getxDir(), board);
         return neighbourAlongDir;
     }
 
-    public void refreshBoard(GridPane board, BoardSquare startingPawn){
+    public void refreshBoard(GridPane board, BoardSquare startingPawn) {
         Arrays.asList(Vector.values())
-                .forEach(vector -> refreshInDirection(vector, board, startingPawn, getNeighbourAlongDir(vector, board, startingPawn)));
+                .forEach(vector -> refreshInDirection(vector, board, startingPawn));
     }
 
 
@@ -77,5 +80,9 @@ class VectorOperations {
             }
         }
         return result;
+    }
+
+    public void setPaintOfStartingPawn(Paint paintOfStartingPawn) {
+        this.paintOfStartingPawn = paintOfStartingPawn;
     }
 }

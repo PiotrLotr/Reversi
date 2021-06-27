@@ -65,34 +65,35 @@ public class View extends Application {
         Integer rowIndex = board.getRowIndex(source);
 
         var selected = (BoardSquare)getNodeByRowColumnIndex(rowIndex, colIndex, board);
+        VectorOperations vectorOperations = new VectorOperations(colIndex, rowIndex);
 
         // modify pawn()
         selected.getPawn().setVisible(true);
         if(clickCounter%2 ==0){
             selected.getPawn().setFill(Color.BLACK);
+            vectorOperations.setPaintOfStartingPawn(Color.BLACK);
         }else{
             selected.getPawn().setFill(Color.WHITE);
+            vectorOperations.setPaintOfStartingPawn(Color.WHITE);
         }
 
         System.out.println(selected);
         System.out.println(clickCounter);
         clickCounter++;
 
-        VectorOperations vectorOperations = new VectorOperations(colIndex, rowIndex);
-        vectorOperations.refreshBoard(board, selected);
 
+        vectorOperations.refreshBoard(board, selected);
     }
 
     private void addGridEvent() {
         board.getChildren().forEach(item -> {
             item.setOnMouseClicked(this::handle);});}
 
-
     public static Node getNodeByRowColumnIndex (final int row, final int column, GridPane gridPane) {
         Node result = null;
-        ObservableList<Node> childrens = gridPane.getChildren();
+        ObservableList<Node> children = gridPane.getChildren();
 
-        for (Node node : childrens) {
+        for (Node node : children) {
             if(gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
                 result = node;
                 break;
