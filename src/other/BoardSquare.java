@@ -3,6 +3,7 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class BoardSquare extends StackPane {
 
@@ -12,6 +13,7 @@ public class BoardSquare extends StackPane {
     private Region square;
     private int col;
     private int row;
+
 
 
     public BoardSquare(Color defaultColor, int col, int row) {
@@ -56,13 +58,22 @@ public class BoardSquare extends StackPane {
     private void startingPawnsSet(int row, int col, Pawn pawn) {
         if((row == 3 & col == 3) || (row == 4 & col ==4)) {
             pawn.setVisible(true);
-            pawn.setFill(Color.WHITE);
+            pawn.setColor(Color.WHITE);
+
         } else if ((row == 3 & col ==4) || (row == 4 & col == 3)){
             pawn.setVisible(true);
-            pawn.setFill(Color.BLACK);
+            pawn.setColor(Color.BLACK);
         }else {
             pawn.setVisible(false);
         }
+    }
+
+    public Paint getPawnColor(){
+        return pawn.getColor();
+    }
+
+    public void setPawnColor(Paint color){
+        pawn.setColor(color);
     }
 
     public Pawn getPawn() {

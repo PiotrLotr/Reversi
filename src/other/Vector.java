@@ -2,14 +2,14 @@ package other;
 
 public enum Vector {
 
-     plusX(1,0),
-     minusX(-1,0),
-     plusY(0,1),
-     minusY(0,-1),
-     plusXplusY(1,1),
-     plusXminusY(1,-1),
-     minusXplusY(-1,1),
-     minusXminuxY(-1,-1);
+     RIGHT(1,0),
+     LEFT(-1,0),
+     BOTTOM(0,1),
+     TOP(0,-1),
+     RIGHT_BOTTOM(1,1),
+     RIGHT_TOP(1,-1),
+     LEFT_BOTTOM(-1,1),
+     LEFT_TOP(-1,-1);
 
      private int xDir;
      private int yDir;

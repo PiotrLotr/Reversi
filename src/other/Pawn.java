@@ -1,12 +1,13 @@
 package other;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class Pawn extends Circle {
 
     int x,y;
-    Color color;
+    Paint color;
 
     public Pawn(int x, int y, Color color) {
         this.x = x;
@@ -30,6 +31,12 @@ public class Pawn extends Circle {
         this.y = y;
     }
 
+    public Paint getColor() {
+        return color;
+    }
 
-
+    public void setColor(Paint color) {
+        this.setFill(color);
+        this.color = color;
+    }
 }
