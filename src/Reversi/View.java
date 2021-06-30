@@ -2,8 +2,12 @@ package Reversi;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
@@ -19,15 +23,15 @@ import static Reversi.Model.getNodeByRowColumnIndex;
 
 public class View extends Application {
 
-    public static final int BOARD_ROW = 8;
-    public static final int BOARD_COL = 8;
+    public static final int BOARD_ROW = 10;
+    public static final int BOARD_COL = 10;
 
     GridPane board = new GridPane();
     Background bg = new Background(new BackgroundFill(Color.WHEAT, CornerRadii.EMPTY, Insets.EMPTY));
     HBox hbox = new HBox();
     VBox vbox = new VBox();
     Label label = new Label("BLACK STARTS");
-    Label whiteResult = new Label( "0" );
+    Label whiteResult = new Label("0");
     Circle white = new Circle();
     Label blackResult = new Label();
     Circle black = new Circle();
@@ -43,6 +47,10 @@ public class View extends Application {
         setTurnIndicatorParameters();
         setResultIndicatorsParameters();
 
+        vbox.setPadding(new Insets(5, 5, 5, 50));
+        vbox.setSpacing(20);
+        vbox.setAlignment(Pos.CENTER);
+
         vbox.getChildren().addAll(
                 label,
                 turnIndicator,
@@ -52,14 +60,37 @@ public class View extends Application {
                 whiteResult
         );
 
-        hbox.setBackground(bg);
-        hbox.getChildren().addAll(vbox, drawBoard());
+        Scene scene = new Scene(hbox, 900, 800);
 
-        Scene scene = new Scene(hbox, 700, 700);
+        hbox.setBackground(bg);
+        hbox.getChildren().addAll(createMenu(),vbox, drawBoard());
         addGridEvent();
+
         stage.setScene(scene);
         stage.show();
+
     }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    private VBox createMenu() {
+        Menu m = new Menu("File");
+        MenuBar mb = new MenuBar();
+
+        final Menu menu1 = new Menu("Save");
+        final Menu menu2 = new Menu("Open");
+
+        m.getItems().addAll(menu1, menu2);
+        mb.getMenus().add(m);
+
+
+        VBox vBox = new VBox(mb);
+
+        return vBox;
+    }
+
 
     private void setResultIndicatorsParameters() {
         white.setFill(Color.WHITE);
@@ -68,6 +99,7 @@ public class View extends Application {
         black.setFill(Color.BLACK);
         black.setVisible(true);
         black.setRadius(40);
+
     }
 
     private void setTurnIndicatorParameters() {
@@ -80,16 +112,26 @@ public class View extends Application {
         turnIndicator.setFill(paint);
     }
 
-    public void changeResult(){
+    public void changeResult() {
         var whitePawns = controller.countPawns(board, Color.WHITE);
         var blackPawns = controller.countPawns(board, Color.BLACK);
 
         whiteResult.setText(String.valueOf(whitePawns));
         blackResult.setText(String.valueOf(blackPawns));
-    }
 
-    public static void main(String[] args) {
-        launch(args);
+        if (controller.isEndOfGame(board)) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            if (whitePawns > blackPawns) {
+                alert.setTitle("WHITE WINS!!");
+                alert.setContentText("END OF THE GAME. WHITE PAWNS WINS!!!");
+                alert.showAndWait();
+            } else {
+                alert.setTitle("BLACK WINS!!");
+                alert.setContentText("END OF THE GAME. BLACK PAWNS WINS!!!");
+                alert.showAndWait();
+            }
+        }
+
     }
 
     public GridPane drawBoard() {
@@ -101,12 +143,12 @@ public class View extends Application {
         }
         for (int row = 0; row < 8; row++) {
             RowConstraints constrains = new RowConstraints();
-            constrains.setPercentHeight(20);
+            constrains.setPercentHeight(10);
             board.getRowConstraints().add(constrains);
         }
         for (int col = 0; col < 8; col++) {
             ColumnConstraints constrains = new ColumnConstraints();
-            constrains.setPercentWidth(20);
+            constrains.setPercentWidth(10);
             board.getColumnConstraints().add(constrains);
         }
         return board;
@@ -119,7 +161,7 @@ public class View extends Application {
         Integer rowIndex = board.getRowIndex(source);
 
         var selected = (BoardSquare) getNodeByRowColumnIndex(rowIndex, colIndex, board);
-        VectorOperations vectorOperations = new VectorOperations(colIndex, rowIndex);
+        VectorOperations vectorOperations = new VectorOperations();
 
         if (clickCounter % 2 == 0) {
             selected.setPawnColor(Color.BLACK);

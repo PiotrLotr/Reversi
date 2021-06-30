@@ -6,6 +6,8 @@ import javafx.scene.layout.GridPane;
 
 public class Model {
 
+
+
     public static Node getNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         Node result = null;
         ObservableList<Node> children = gridPane.getChildren();

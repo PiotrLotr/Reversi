@@ -12,13 +12,9 @@ import static Reversi.Model.getNodeByRowColumnIndex;
 
 public class VectorOperations {
 
-    int col0;
-    int row0;
     Paint paintOfStartingPawn;
 
-    public VectorOperations(int col0, int row0) {
-        this.col0 = col0;
-        this.row0 = row0;
+    public VectorOperations() {
     }
 
     public void setPaintOfStartingPawn(Paint paintOfStartingPawn) {
@@ -31,8 +27,11 @@ public class VectorOperations {
     }
 
     public boolean isOpponentPawn(Vector vector, GridPane board, BoardSquare squareChecked) {
-        if (squareChecked.getPawn().isVisible() == true &&
-                squareChecked.getPawnColor() != paintOfStartingPawn) {
+        if (
+                squareChecked.getPawn().isVisible() == true &&
+                squareChecked.getPawnColor() != paintOfStartingPawn &&
+                squareChecked.getPawn() != null)
+        {
             return true;
         } else {
             return false;
@@ -45,19 +44,9 @@ public class VectorOperations {
 
         while (isOpponentPawn(vector, board, nextAlongDir)) {
             pawnsAlongLine.add(nextAlongDir);
-            if (
-                    getNextAlongDir(vector, board, nextAlongDir).getPawn().getX() < 1 ||
-                    getNextAlongDir(vector, board, nextAlongDir).getPawn().getX() > View.BOARD_COL ||
-                    getNextAlongDir(vector, board, nextAlongDir).getPawn().getY() < 1 ||
-                    getNextAlongDir(vector, board, nextAlongDir).getPawn().getY() > View.BOARD_ROW
-            )
-            {
-                continue;
-            } else {
                 nextAlongDir = getNextAlongDir(vector, board, nextAlongDir);
                 System.out.println(nextAlongDir);
             }
-        }
         pawnsAlongLine.add(nextAlongDir);
         return pawnsAlongLine;
     }

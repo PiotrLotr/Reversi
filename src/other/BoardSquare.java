@@ -1,4 +1,5 @@
 package other;
+import Reversi.View;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
@@ -38,7 +39,9 @@ public class BoardSquare extends StackPane {
 
         this.getChildren().addAll(square, pawn);
 
+        configureBoard(row, col, this);
         startingPawnsSet(row, col, pawn);
+
     }
 
     public void highlight() {
@@ -56,15 +59,31 @@ public class BoardSquare extends StackPane {
     }
 
     private void startingPawnsSet(int row, int col, Pawn pawn) {
-        if((row == 3 & col == 3) || (row == 4 & col ==4)) {
+        if(
+                (row == View.BOARD_ROW/2-1 & col == View.BOARD_COL/2-1) ||
+                (row == View.BOARD_ROW/2 & col ==View.BOARD_COL/2)
+        ){
             pawn.setVisible(true);
             pawn.setColor(Color.WHITE);
 
-        } else if ((row == 3 & col ==4) || (row == 4 & col == 3)){
+        } else if (
+                (row == View.BOARD_ROW/2-1 & col ==View.BOARD_COL/2) ||
+                (row == View.BOARD_ROW/2 & col == View.BOARD_COL/2-1)
+        ){
             pawn.setVisible(true);
             pawn.setColor(Color.BLACK);
         }else {
             pawn.setVisible(false);
+        }
+    }
+    public void configureBoard(int row, int col, StackPane boardSquare){
+        if(
+                row == 0 ||
+                col == 0 ||
+                row == View.BOARD_ROW-1 ||
+                col == View.BOARD_COL-1
+        ){
+            boardSquare.setVisible(false);
         }
     }
 
