@@ -63,7 +63,7 @@ public class View extends Application {
         Scene scene = new Scene(hbox, 900, 800);
 
         hbox.setBackground(bg);
-        hbox.getChildren().addAll(createMenu(),vbox, drawBoard());
+        hbox.getChildren().addAll(createMenu(), vbox, drawBoard());
         addGridEvent();
 
         stage.setScene(scene);
@@ -162,29 +162,33 @@ public class View extends Application {
 
         var selected = (BoardSquare) getNodeByRowColumnIndex(rowIndex, colIndex, board);
         VectorOperations vectorOperations = new VectorOperations();
-
-        if (clickCounter % 2 == 0) {
-            selected.setPawnColor(Color.BLACK);
-        } else {
-            selected.setPawnColor(Color.WHITE);
-        }
-        vectorOperations.setPaintOfStartingPawn(selected.getPawnColor());
-
-        // modify pawn()
-        if (vectorOperations.isSquareValid(board, selected)) {
-            selected.getPawn().setVisible(true);
-
-            vectorOperations.refreshBoard(board, selected);
-            System.out.println(selected);
-            System.out.println(clickCounter);
+        
+        if (selected.getPawnColor() == null) {
             if (clickCounter % 2 == 0) {
-                changeIndicatorColor(Color.WHITE);
-                label.setText("WHITE TURN");
+                selected.setPawnColor(Color.BLACK);
             } else {
-                changeIndicatorColor(Color.BLACK);
-                label.setText("BLACK TURN");
+                selected.setPawnColor(Color.WHITE);
             }
-            clickCounter++;
+            vectorOperations.setPaintOfStartingPawn(selected.getPawnColor());
+
+            // modify pawn()
+            if (vectorOperations.isSquareValid(board, selected)) {
+                selected.getPawn().setVisible(true);
+
+                vectorOperations.refreshBoard(board, selected);
+                System.out.println(selected);
+                System.out.println(clickCounter);
+
+                if (clickCounter % 2 == 0) {
+                    changeIndicatorColor(Color.WHITE);
+                    label.setText("WHITE TURN");
+                } else {
+                    changeIndicatorColor(Color.BLACK);
+                    label.setText("BLACK TURN");
+                }
+                clickCounter++;
+
+            }
         }
         changeResult();
     }

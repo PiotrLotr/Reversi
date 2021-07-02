@@ -76,9 +76,11 @@ public class VectorOperations {
             tempArray.addAll(getLineOfPawns(vector, board, boardSquare));
             var lastSquare = tempArray.get(tempArray.size() - 1);
 
-            if (lastSquare.getPawnColor() != null &&
+            if (
+                    lastSquare.getPawnColor() != null &&
                     lastSquare.getPawnColor() == paintOfStartingPawn
-                    && tempArray.size() > 1)
+                    && tempArray.size() > 1
+            )
                 return true;
         }
         return false;
